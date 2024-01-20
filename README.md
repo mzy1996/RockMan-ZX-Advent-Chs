@@ -6,7 +6,7 @@
 
 翻译：多面体·唯灵
 
-破解：noword、fciq
+破解：noword、fciq、卧看微尘
 
 美工：扭Type-小光
 
