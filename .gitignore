@@ -1,0 +1,6 @@
+*.nds
+.temp
+.vscode
+.build
+.tempChs
+.tempjp
