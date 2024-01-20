@@ -2,8 +2,10 @@
 ::创建汉化rom工作区
 setlocal enabledelayedexpansion
 set buildfoldername=.\.temp
+set Rev0arm9CompressSize=688984
+set Rev1arm9CompressSize=690452
 ::解压arm9
-dd if=%buildfoldername%\root\ftc\arm9.bin of=%buildfoldername%\root\ftc\arm9de.bin bs=1 skip=0 count=688984
+dd if=%buildfoldername%\root\ftc\arm9.bin of=%buildfoldername%\root\ftc\arm9de.bin bs=1 skip=0 count=%Rev1arm9CompressSize%
 .\tools\cue\blz.exe -d %buildfoldername%\root\ftc\arm9de.bin
 move /Y %buildfoldername%\root\ftc\arm9de.bin %buildfoldername%\root\ftc\arm9.bin
 ::修改arm9及其他汉化资源修改替换
