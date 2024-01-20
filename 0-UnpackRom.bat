@@ -4,7 +4,7 @@
 ::清理和新建临时文件夹，并解包nds文件
 setlocal enabledelayedexpansion
 set tempfoldername=.\.temp
-set ndsfilename=.\baserom_jp.nds
+set ndsfilename=.\baserom_jp_rev1.nds
 set toolfilename=.\tools\ndstool\ndstool.exe
 rd /s /q %tempfoldername%
 md %tempfoldername%\root\ftc

@@ -5,6 +5,7 @@ chcp 65001
 ::此处指令将根目录内除baserom_jp.nds外的所有nds生成对应的xdelta补丁，放置于release文件夹内
 for %%f in (*.nds) do (
 ".\tools\xdelta3\xdelta3-3.0.11-x86_64.exe" -v -e -s ".\baserom_jp.nds" ".\%%~nf.nds" ".\release\%%~nf.xdelta"
+".\tools\HashCal\HashCal.exe" ".\%%~nf.nds" ".\release"
 )
 cd .\release
 del baserom_jp.xdelta
