@@ -8,6 +8,6 @@
 
 破解：noword、fciq、卧看微尘
 
-美工：扭Type-小光
+美工：扭Type-小光、Zero1000、fciq
 
 测试：卧看微尘、MIDNIGHT-CONVOY、清流之风、猫猫
