@@ -1,9 +1,13 @@
 .nds
-.open ".\RockmanZXAdvent_Chs.nds",0x0
+.include ".\include\symbol.s"
 
-MainNDSFilesize         equ filesize(".\RockmanZXAdvent_Chs.nds")
+.open NDSFileName,0x0
+MainNDSFilesize         equ filesize(NDSFileName)
 .org MainNDSFilesize
-.fill (0x04000000 - MainNDSFilesize),0xFF
-
+.if (MainNDSFilesize <= 0x04000000)
+    .fill (0x04000000 - MainNDSFilesize),0xFF
+.elseif (MainNDSFilesize > 0x04000000)
+    .fill (0x08000000 - MainNDSFilesize),0xFF
+.endif
 .close
 
