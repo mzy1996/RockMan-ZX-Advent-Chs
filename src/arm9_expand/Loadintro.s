@@ -1,12 +1,5 @@
-.open ".\.temp\root\ftc\arm9.bin", 0x02000000
 ;插入16RGBa片头的尝试，常规模拟器及实机无法正常显示全部内容，nogba可以完整显示上下屏
 .arm
-InsertOfArm9  equ 0x020008A0
-EndOfArm9     equ 0x02114A38
-.org InsertOfArm9
-    b EndOfArm9
-
-.org EndOfArm9
 Upper:
     ldr r1,=0x04000000
     ldr r0,=0x00020000
@@ -16,7 +9,7 @@ Upper:
     strb r0,[r1,0]
     ldr r0,=0x06000000
     ldr r1,=Intro_top
-    ldr r3,=0x6000
+    ldr r3,=(EndOfIntro_top - Intro_top)/4
 
 LoadUpper:
 	ldr r2,[r1,0]
@@ -39,7 +32,7 @@ Bottom:
     strb r0,[r1,0]
     mov r0,0x06200000
     ldr r1,=Intro_bottom
-    mov r3,0x8000
+    mov r3,(EndOfIntro_bottom - Intro_bottom)/4
 
 LoadBottom:
 	ldr r2,[r1,0]
@@ -56,17 +49,12 @@ Wait:
 	mov r2,1
 	and r2,r1
 	cmp r2,0
-	beq Back
+	beq Continue2
 	b Wait
-
-Back:
-	ldr r0,=0x02000B68
-	b 0x20008A4
 .pool
-
 Intro_top:
     .incbin ".\data\Intro_top.bin"
+EndOfIntro_top:
 Intro_bottom:
     .incbin ".\data\Intro_bottom.bin"
-
-.close
+EndOfIntro_bottom:
