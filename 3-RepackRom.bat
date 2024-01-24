@@ -30,7 +30,9 @@ set toolfilename=.\tools\ndstool\ndstool.exe
 ::填充字节
 .\tools\armips\armips.exe .\tools\Fill.asm
 ::重打包
-::.\tools\tinke\Tinke.exe %newndsfilename%
+rd /s /q %tempfoldername%
+md %tempfoldername%
+.\tools\tinke\Tinke.exe %newndsfilename%
 endlocal
 ::
 ::3秒后自动关闭本窗口
