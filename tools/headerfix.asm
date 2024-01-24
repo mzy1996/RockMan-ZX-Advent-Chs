@@ -1,5 +1,9 @@
 .nds
-.open ".\RockmanZXAdvent_Chs.nds",0x0
+.include ".\include\symbol.s"
+
+.open NDSFileName,0x0
+.org 0x1E
+    .byte Version
 
 .org 0x60
     .word 0x00416657 ;Port 40001A4h setting for normal commands (usually 00586000h)
