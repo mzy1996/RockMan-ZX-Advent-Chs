@@ -32,6 +32,7 @@ Label_chsfont:
     add sp,4
     pop r0-r7
     add sp,0x1C
+    
     ldr r1,[sp,4]
     ldrb r1,[r1,8]
     cmp r1,8
