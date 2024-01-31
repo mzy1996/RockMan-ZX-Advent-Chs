@@ -9,7 +9,9 @@ for %%A in ("%buildfoldername%\root\ftc\arm9.bin") do set "arm9Size=%%~zA"
 ::计算arm压缩大小
 set /a arm9CompressSize=arm9Size - 0xC
 ::裁切另存压缩的arm9
-dd if=%buildfoldername%\root\ftc\arm9.bin of=%buildfoldername%\root\ftc\arm9de.bin bs=1 skip=0 count=%arm9CompressSize%
+copy "%buildfoldername%\root\ftc\arm9.bin" "%buildfoldername%\root\ftc\arm9de.bin" /Y
+fsutil file setEOF "%buildfoldername%\root\ftc\arm9de.bin" %arm9CompressSize%
+::dd if=%buildfoldername%\root\ftc\arm9.bin of=%buildfoldername%\root\ftc\arm9de.bin bs=1 skip=0 count=%arm9CompressSize%
 ::解压压缩的另存arm9
 .\tools\cue\blz.exe -d %buildfoldername%\root\ftc\arm9de.bin
 ::另存arm9合并进原arm9
