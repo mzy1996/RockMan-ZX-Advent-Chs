@@ -7,7 +7,7 @@ setlocal enabledelayedexpansion
 set /p Version=<.\BaseJPVersion.txt
 ::根据版本选择指定nds原文件
 if %Version% equ 0 (
-    set ndsfilename=.\baserom_jp.nds)
+    set ndsfilename=.\baserom_jp_rev0.nds)
 if %Version% equ 1 (
     set ndsfilename=.\baserom_jp_rev1.nds)
 ::设定临时文件夹、工具位置
