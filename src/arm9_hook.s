@@ -10,7 +10,7 @@
 .thumb
 .org FontRely1
     push r0-r1
-    ldr r0,=0x023DF081;(Label_chsfont|1)
+    ldr r0,=((ChsFontFunctionInRam+0x80)|1);(Label_chsfont|1)
     str r0,[sp,0x4]
     pop r0,pc
 .pool

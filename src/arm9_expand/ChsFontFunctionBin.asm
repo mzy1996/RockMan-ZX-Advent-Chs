@@ -1,7 +1,7 @@
 .nds
 .include ".\include\symbol.s"
 
-.create "./.temp/ChsFontFunction.bin",0x023DF000
+.create "./.temp/ChsFontFunction.bin",ChsFontFunctionInRam
 ;arm9拓展的中文字库主程序
 .func ChsFontFunction
 Vars_struct:

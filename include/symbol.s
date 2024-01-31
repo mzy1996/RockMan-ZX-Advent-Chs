@@ -28,4 +28,4 @@ Version equ readascii(".\BaseJPVersion.txt",0,1)
 .endif
 
 InsertOfArm9            equ 0x020008A0
-ChsFontFunctionInRam    equ 0x023DF000
+ChsFontFunctionInRam    equ 0x023DFC00
