@@ -2,7 +2,7 @@
 <Tinke>
   <Options>
     <Language>简体中文</Language>
-    <InstantSearch>True</InstantSearch>
+    <InstantSearch>False</InstantSearch>
     <WindowDebug>False</WindowDebug>
     <WindowInformation>False</WindowInformation>
   </Options>

@@ -1,6 +1,5 @@
 .create ".\.temp\root\data\m_back_jp.bin", 0
-    ;.incbin ".\strings\m_back_jp.bin"
-    .incbin ".\strings\m_back_jp20240119.bin"
+    .incbin ".\strings\m_back_jp.bin"
 .close
 
 .create ".\.temp\root\data\m_mg_jp.bin", 0

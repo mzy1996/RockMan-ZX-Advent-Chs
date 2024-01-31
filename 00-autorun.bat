@@ -17,7 +17,7 @@ echo ===========================================
 
 
 call 3-RepackRom.bat
-::call 9-clean.bat
+call 9-clean.bat
 setlocal enabledelayedexpansion
 ::从文件读取当前nds文件版本(rev0或rev1，以0或1指代)
 set /p Version=<.\BaseJPVersion.txt

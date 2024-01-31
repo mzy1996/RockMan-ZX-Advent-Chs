@@ -7,8 +7,7 @@
 .close
 
 .create ".\.temp\root\data\mg_txt_jp.bin", 0
-    ;.incbin ".\graphic\mg_txt_jp.bin"
-    .incbin ".\graphic\mg_txt_jp20240119.bin"
+    .incbin ".\graphic\mg_txt_jp.bin"
 .close
 
 .create ".\.temp\root\data\obj_fnt.bin", 0
@@ -16,8 +15,7 @@
 .close
 
 .create ".\.temp\root\data\sub_oth_jp.bin", 0
-    ;.incbin ".\graphic\sub_oth_jp.bin"
-    .incbin ".\graphic\sub_oth_jp20240119.bin"
+    .incbin ".\graphic\sub_oth_jp.bin"
 .close
 
 .create ".\.temp\root\data\title.bin", 0
