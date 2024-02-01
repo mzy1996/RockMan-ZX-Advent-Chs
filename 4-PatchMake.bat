@@ -8,8 +8,8 @@ if exist ".\release\RockmanZXAdvent_Chs_rev0.xdelta" ( del ".\release\RockmanZXA
 ".\tools\xdelta3\xdelta3-3.0.11-x86_64.exe" -v -e -s ".\baserom_jp_rev1.nds" ".\RockmanZXAdvent_Chs_rev1.nds" ".\release\RockmanZXAdvent_Chs_rev1.xdelta"
 
 ::生成hash值
-".\tools\HashCal\HashCal.exe" ".\baserom_jp_rev0.nds" ".\release"
-".\tools\HashCal\HashCal.exe" ".\baserom_jp_rev1.nds" ".\release"
+if not exist ".\release\baserom_jp_rev0.nds_hash.txt" ( ".\tools\HashCal\HashCal.exe" ".\baserom_jp_rev0.nds" ".\release")
+if not exist ".\release\baserom_jp_rev1.nds_hash.txt" ( ".\tools\HashCal\HashCal.exe" ".\baserom_jp_rev1.nds" ".\release")
 ".\tools\HashCal\HashCal.exe" ".\RockmanZXAdvent_Chs_rev0.nds" ".\release"
 ".\tools\HashCal\HashCal.exe" ".\RockmanZXAdvent_Chs_rev1.nds" ".\release"
 
