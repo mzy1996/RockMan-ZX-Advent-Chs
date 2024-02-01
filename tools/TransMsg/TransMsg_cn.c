@@ -145,25 +145,22 @@ void decodeBinaryFile(const char* binaryFile, const char* charmapFile)
                 //hex检索码表
                 unsigned int hexValue;
                 unsigned int Length = 0;
-                if ( buffer[0] <= 0xEF || 
+                if ( buffer[0] <= 0xDF || 
                     (buffer[0] >= 0xFA && buffer[0] <= 0xFF))
                 {
                     hexValue = buffer[0];
                     Length = 1;
                 }
-                else if ((buffer[0] == 0xF0 && buffer[1] <= 0xFE) ||
-                         (buffer[0] >= 0xF1 && buffer[0] <= 0xF8))
+                else if (buffer[0] >= 0xE0 && buffer[0] <= 0xF8)
                 {
                     hexValue = (buffer[0] << 8) | buffer[1];
                     Length = 2;
                 }
-                else if ((buffer[0] == 0xF0 && buffer[1] == 0xFF) ||
-                          buffer[0] == 0xF9)
+                else if (buffer[0] == 0xF9)
                 {
                     hexValue = (buffer[0] << 16) | (buffer[1] << 8) | buffer[2];
                     Length = 3;
                 }
-                
                 if((OffsetNow != Filesize - 1) && (OffsetNow != OffsetNext))
                 {
                     char* utf8Char = NULL;
