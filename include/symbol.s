@@ -3,6 +3,7 @@ Version equ readascii(".\BaseJPVersion.txt",0,1)
     ;rev0
     FontRely1           equ 0x020800E8
     FontRely2           equ 0x02080486
+    FontCharAdd         equ 0x02080464
     EndOfArm9           equ 0x02114A38
     AddressOfFontJP     equ 0x0211758C
     FS_InitFile         equ 0x020ACF34
@@ -16,6 +17,7 @@ Version equ readascii(".\BaseJPVersion.txt",0,1)
     ;rev1
     FontRely1           equ 0x02080630
     FontRely2           equ 0x020809CE
+    FontCharAdd         equ 0x020809AC
     EndOfArm9           equ 0x02115038
     AddressOfFontJP     equ 0x02117B8C
     FS_InitFile         equ 0x020AD50C
