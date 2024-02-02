@@ -54,19 +54,16 @@ void loadCharMap(const char* charmapFile, struct CharMap** charmap, size_t* char
 }
 
 // 函数用于根据码表解码二进制文件并写入文本文件
-void decodeBinaryFile(const char* binaryFile, const char* charmapFile, const char* IsDSor3DS, const char* IscharmapRevise) {
+void decodeBinaryFile(const char* binaryFile, const char* charmapFile) 
+{
+    //打开文本文件
     FILE* input = fopen(binaryFile, "rb");
-    if (input == NULL) {
+    if (input == NULL) 
+    {
         perror("无法打开二进制文件");
         return;
     }
-
-    //加载码表
-    size_t charmapSize;
-    struct CharMap* charmap;
-    loadCharMap(charmapFile, &charmap, &charmapSize);
-
-    //获得打包文件名并创建.s文件
+    //获得文本文件名并创建同名.s文件
     char MainFileName[256];
     strcpy(MainFileName, binaryFile);
     MainFileName[strlen(binaryFile)-4]=0;//去掉.bin后缀
@@ -80,337 +77,153 @@ void decodeBinaryFile(const char* binaryFile, const char* charmapFile, const cha
         return;
     }
 
+    //加载码表
+    size_t charmapSize;
+    struct CharMap* charmap;
+    loadCharMap(charmapFile, &charmap, &charmapSize);
+
     //获得子文件数量
+    unsigned char tempCount1,tempCount2;
+    fseek(input, 2, SEEK_SET);
+    tempCount1 = fgetc(input);
+    tempCount2 = fgetc(input);
+    unsigned int textsCount = ((tempCount2<<8)|tempCount1) / 2;
+    //创建armips格式
+    fprintf(outputMain, ".create \".\\.temp\\root\\data\\%s.bin\", 0\n",MainFileName);
+    //文件头
+    fprintf(outputMain, ";文件头\n");
+    fprintf(outputMain, ".hword (EndOf%s - 4);除文件头外文件大小\n",MainFileName);
+    if(textsCount == 0)
+        fprintf(outputMain, ".hword 0 ;文本正文起始地址\n",MainFileName);
+    else
+        fprintf(outputMain, ".hword (%s_000 - 4) ;文本正文起始地址\n",MainFileName);
+    //循环写入子文本偏移地址
+    fprintf(outputMain, ";子文本偏移地址,总计%d条文本\n",textsCount);
+    for(int i = 0;i<textsCount;i++)
+        fprintf(outputMain, ".hword (%s_%03d -%s_000)\n",MainFileName,i,MainFileName);
+    //循环写入子文本数据
+    fprintf(outputMain, "\n;文本正文\n");
+    unsigned int Filesize, TextStart;
+    unsigned int OffsetNow,OffsetNext;
+    unsigned char temp1,temp2;
     fseek(input, 0, SEEK_SET);
-    int subFileCounts,MainBaseOffset,temp1,temp2,temp3,temp4;
     temp1 = fgetc(input);
     temp2 = fgetc(input);
-    temp3 = fgetc(input);
-    temp4 = fgetc(input);
-    subFileCounts = (temp4<<24)|(temp3<<16)|(temp2<<8)|temp1;
-    MainBaseOffset = subFileCounts * 8 + 4;
-    //显示当前子文件文本数量
-    fprintf(outputMain, ";头部数据\n");
-    fprintf(outputMain, ".org 0x0\n");
-    fprintf(outputMain, "%s_header:\n", MainFileName);
-    fprintf(outputMain, "    .word 0x%08x    ;子文件数量:%d\n",subFileCounts,subFileCounts);
-    fprintf(outputMain, "    ;子文件的相对偏移地址, 子文件的大小\n");
-    //循环写入各子文件偏移位置及子文件大小
-    for(int i = 0;i<subFileCounts;i++)
-        fprintf(outputMain, "    .word (%s_%04d - %s_0000),(%s_%04d_End - %s_%04d)\n",MainFileName,i,MainFileName,MainFileName,i,MainFileName,i);
-    fprintf(outputMain, "\n");
-    //写入子文件引用地址
-    fprintf(outputMain, ";子文件\n");
-//printf("working！\n");
-    for(int i = 0;i<subFileCounts;i++)
+    Filesize = ((temp2 << 8)|temp1) + 4;
+    fseek(input, 2, SEEK_SET);
+    temp1 = fgetc(input);
+    temp2 = fgetc(input);
+    TextStart = ((temp2 << 8)|temp1) + 4;
+    for(int i = 0;i<textsCount;i++)
     {
-        //获取当前子文件相对偏移地址及子文件大小
-        fseek(input,4 + i*8,SEEK_SET);
+        //获取第n、n+1条文本地址
+        fseek(input,i*2 + 4,SEEK_SET);
         temp1 = fgetc(input);
         temp2 = fgetc(input);
-        temp3 = fgetc(input);
-        temp4 = fgetc(input);
-        int SubFileOffset = (temp4<<24)|(temp3<<16)|(temp2<<8)|temp1;
+        OffsetNow = ((temp2 << 8)|temp1) + TextStart;
+        fseek(input,(i+1)*2 + 4,SEEK_SET);
         temp1 = fgetc(input);
         temp2 = fgetc(input);
-        temp3 = fgetc(input);
-        temp4 = fgetc(input);
-        int SubFileSize   = (temp4<<24)|(temp3<<16)|(temp2<<8)|temp1;
-        switch(SubFileSize)
+        OffsetNext = ((temp2 << 8)|temp1) + TextStart;
+        if (i == textsCount - 1)
+            OffsetNext = Filesize - 1;
+
+        //循环转码文本
+        fprintf(outputMain, "%s_%03d:\n", MainFileName,i);
+        fprintf(outputMain, ";原文－－－－－－－－－－－－－－－－－－－－－－\n");
+        for(int k = 0;k < 2;k++)
         {
-            case 0:
-                fprintf(outputMain, ".align 4 :: %s_%04d: :: .func %s_%04d_End :: .endfunc ;空子文件\n",MainFileName,i,MainFileName,i);
-                printf("%s_%04d 是空子文件！\n",MainFileName,i);
-                break;
-            case 2://3DS
-                fprintf(outputMain, ".align 4 :: %s_%04d: .hword 0x270F,0x0000 :: .func %s_%04d_End :: .endfunc ;0文本子文件\n",MainFileName,i,MainFileName,i);
-                //fprintf(outputMain, ".align 4 :: %s_%04d: .hword 0x270F :: .func %s_%04d_End :: .endfunc ;0文本子文件\n",MainFileName,i,MainFileName,i);
-                printf("%s_%04d 是0文本子文件！\n",MainFileName,i);
-                break;
-            case 4://DS
-                fprintf(outputMain, ".align 4 :: %s_%04d: .hword 0x270F,0x0000 :: .func %s_%04d_End :: .endfunc ;0文本子文件\n",MainFileName,i,MainFileName,i);
-                printf("%s_%04d 是0文本子文件！\n",MainFileName,i);
-                break;
-            default:
-                fprintf(outputMain, ".align 4 :: %s_%04d: .include \".\\strings\\%s\\%s_%04d.s\"\n",MainFileName,i,MainFileName,MainFileName,i);
-                //创建子文件独立文件
-                char SubFileName[256];
-                sprintf(SubFileName,"%s_%04d",MainFileName,i);
-                char outputSubFileName[256];
-                sprintf(outputSubFileName,"%s\\%s.s",MainFileName,SubFileName);
-                FILE* outputSub = fopen(outputSubFileName, "w");
-                if (outputSub == NULL)
-                    {
-                        perror("无法创建输出文件");
-                        return;
-                    }
-//printf("working！\n");
-                int OffsetLength;
-                if (IsDSor3DS != NULL && strcmp(IsDSor3DS, "-3ds") == 0)
-                    OffsetLength =4;
-                else if (IsDSor3DS != NULL && strcmp(IsDSor3DS, "-ds") == 0)
-                    OffsetLength =2;
-                //计算子文件内文本数量
-                int SubFileBaseOffset = MainBaseOffset + SubFileOffset;
-                int TextCount = 0;
-                int TextCountEnd = 0;
-                int TextNoteExist = 0;
-                while(TextCountEnd == 0)
+            if(k==0)
+                fprintf(outputMain, ";   .strn \"");
+            if(k==1)
+                fprintf(outputMain, "    .strn \"");
+            fseek(input,OffsetNow,SEEK_SET);
+            unsigned char buffer[3];
+            size_t bytesRead;
+            while ((bytesRead = fread(buffer, sizeof(buffer[0]), sizeof(buffer), input)) > 0)
+            {
+                //hex检索码表
+                unsigned int hexValue;
+                unsigned int Length = 0;
+                if ( buffer[0] <= 0xEF || 
+                    (buffer[0] >= 0xFA && buffer[0] <= 0xFF))
                 {
-                    int SubFileTextCurrentOffset,SubFileTextNextOffset,SubFileTextFirstOffset;
-                    fseek(input,SubFileBaseOffset + TextCount*OffsetLength,SEEK_SET);
-                    if (IsDSor3DS != NULL && strcmp(IsDSor3DS, "-3ds") == 0)
+                    hexValue = buffer[0];
+                    Length = 1;
+                }
+                else if ((buffer[0] == 0xF0 && buffer[1] <= 0xFE) ||
+                         (buffer[0] >= 0xF1 && buffer[0] <= 0xF8))
+                {
+                    hexValue = (buffer[0] << 8) | buffer[1];
+                    Length = 2;
+                }
+                else if ((buffer[0] == 0xF0 && buffer[1] == 0xFF) ||
+                          buffer[0] == 0xF9)
+                {
+                    hexValue = (buffer[0] << 16) | (buffer[1] << 8) | buffer[2];
+                    Length = 3;
+                }
+                
+                if((OffsetNow != Filesize - 1) && (OffsetNow != OffsetNext))
+                {
+                    char* utf8Char = NULL;
+                    for (size_t j = 0; j < charmapSize; j++)
                     {
-                        temp1 = fgetc(input);
-                        temp2 = fgetc(input);
-                        temp3 = fgetc(input);
-                        temp4 = fgetc(input);
-                        SubFileTextCurrentOffset = (temp4<<24)|(temp3<<16)|(temp2<<8)|temp1;
-                        temp1 = fgetc(input);
-                        temp2 = fgetc(input);
-                        temp3 = fgetc(input);
-                        temp4 = fgetc(input);
-                        SubFileTextNextOffset = (temp4<<24)|(temp3<<16)|(temp2<<8)|temp1;
-                    }
-                    else if (IsDSor3DS != NULL && strcmp(IsDSor3DS, "-ds") == 0)
-                    {
-                        temp1 = fgetc(input);
-                        temp2 = fgetc(input);
-                        SubFileTextCurrentOffset =(temp2<<8)|temp1;
-                        temp1 = fgetc(input);
-                        temp2 = fgetc(input);
-                        SubFileTextNextOffset = (temp2<<8)|temp1;
-                    }
-                    if(TextCount == 0)
-                        SubFileTextFirstOffset = SubFileTextCurrentOffset;
-
-                    fseek(input,SubFileBaseOffset+SubFileTextCurrentOffset,SEEK_SET);
-                    unsigned char buffer[2];
-                    while (fread(buffer, sizeof(buffer[0]), sizeof(buffer), input) == sizeof(buffer))
-                    {
-                        unsigned int hexValue = (buffer[0] << 8) | buffer[1];
-                        if (hexValue == 0x0F27 || ftell(input) == (SubFileBaseOffset+SubFileSize))
+                        if (charmap[j].hexValue == hexValue)
                         {
-                            TextCountEnd = 1;
-                            TextCount++;
-                            if(TextCount <(SubFileTextFirstOffset /OffsetLength))
-                                TextNoteExist = 1;
-                            break;
-                        }
-                        if (ftell(input) == (SubFileBaseOffset+SubFileTextNextOffset))
-                        {
-                            TextCount++;
+                            utf8Char = charmap[j].utf8Char;
                             break;
                         }
                     }
+                    //存在码表
+                    if (utf8Char != NULL)
+                            fprintf(outputMain, "%s", utf8Char);
+                    //不存在码表
+                    else
+                        fprintf(outputMain, "[NoCharmap:0x%X]",hexValue);
                 }
-
-//printf("working！\n");
-                //显示当前子文件文本数量
-                fprintf(outputSub, ";%s文本数量为：%d\n\n", SubFileName,TextCount);
-                //子文件头：
-                fprintf(outputSub, ";子文件头\n");
-                fprintf(outputSub, "%s_header:\n", SubFileName);
-                fprintf(outputSub, "    ;子文件内各文本的相对偏移地址\n");
-                //循环写入各文本偏移位置
-                if (IsDSor3DS != NULL && strcmp(IsDSor3DS, "-3ds") == 0)
+                //矫正指针位置
+                fseek(input, Length - bytesRead, SEEK_CUR);
+                //读取文本字符是否达到下一文本地址
+                int offset = ftell(input);
+                if (ftell(input) == OffsetNext || (OffsetNow == Filesize - 1)|| (OffsetNow == OffsetNext)/*|| hexValue == 0xFE*/)
                 {
-                    for(int j = 0;j<TextCount;j++)
-                        //fprintf(outputSub, "    .word (%s_%04d - %s_header)\n", SubFileName,j,SubFileName);
-                        fprintf(outputSub, "    .hword (%s_%04d - %s_header)\n", SubFileName,j,SubFileName);
-
+                    fprintf(outputMain, "\"\n");
+                    if(k==0)
+                        fprintf(outputMain, ";译文－－－－－－－－－－－－－－－－－－－－－－\n");
+                    if(k==1)
+                        fprintf(outputMain, ";结束－－－－－－－－－－－－－－－－－－－－－－\n\n\n");
+                    break;
                 }
-                else if (IsDSor3DS != NULL && strcmp(IsDSor3DS, "-ds") == 0)
-                {
-                    for(int j = 0;j<TextCount;j++)
-                        fprintf(outputSub, "    .hword (%s_%04d - %s_header)\n", SubFileName,j,SubFileName);
-
-                }
-                fprintf(outputSub, "\n");
-                //子文件正文：
-                fprintf(outputSub, ";子文件正文\n");
-                fprintf(outputSub, ";注释文本\n");
-                fprintf(outputSub, "%s_note:",SubFileName);
-                if(TextNoteExist == 1)
-                {
-                    fprintf(outputSub, " .strn \"");
-                    int StartOffset,NextOffset;
-                    StartOffset =TextCount * OffsetLength;
-                    fseek(input,SubFileBaseOffset,SEEK_SET);
-                    if (IsDSor3DS != NULL && strcmp(IsDSor3DS, "-3ds") == 0)
-                    {
-                        temp1 = fgetc(input);
-                        temp2 = fgetc(input);
-                        temp3 = fgetc(input);
-                        temp4 = fgetc(input);
-                        NextOffset  = (temp4<<24)|(temp3<<16)|(temp2<<8)|temp1;
-                    }
-                    else if (IsDSor3DS != NULL && strcmp(IsDSor3DS, "-ds") == 0)
-                    {
-                        temp1 = fgetc(input);
-                        temp2 = fgetc(input);
-                        NextOffset  = (temp2<<8)|temp1;
-
-                    }
-                    fseek(input,SubFileBaseOffset + StartOffset,SEEK_SET);
-                    //准备循环转码文本
-                    unsigned char buffer[2];
-                    while (fread(buffer, sizeof(buffer[0]), sizeof(buffer), input) == sizeof(buffer))
-                    {
-                        //hex检索码表
-                        unsigned int hexValue = (buffer[0] << 8) | buffer[1];
-                        if (hexValue == 0x0F27)
-                        {
-                            fprintf(outputSub, "\"\n");
-                            break;
-                        }
-
-                        if (IscharmapRevise != NULL && strcmp(IscharmapRevise, "-r") == 0)
-                            hexValue = (buffer[1] << 8) | buffer[0];
-                        char* utf8Char = NULL;
-                        for (size_t i = 0; i < charmapSize; i++)
-                        {
-                            if (charmap[i].hexValue == hexValue)
-                            {
-                                utf8Char = charmap[i].utf8Char;
-                                break;
-                            }
-                        }
-                        //存在码表
-                        if (utf8Char != NULL)
-                                fprintf(outputSub, "%s", utf8Char);
-                        //不存在码表
-                        else
-                            fprintf(outputSub, "[NoCharmap:0x%X]",hexValue);
-                        //读取文本字符是否达到下一文本地址
-                        if (ftell(input) == (SubFileBaseOffset+NextOffset)|| ftell(input) == (SubFileBaseOffset+SubFileSize))
-                        {
-                            fprintf(outputSub, "\"\n");
-                            break;
-                        }
-                    }
-                }
-                else
-                    fprintf(outputSub, ";无\n");
-
-                fprintf(outputSub, ";正式文本\n", SubFileName);
-                for(int j = 0;j<TextCount;j++)
-                {
-                    int StartOffset,NextOffset;
-
-                    fprintf(outputSub, "%s_%04d: .strn \"", SubFileName,j);
-                    //定位当前文本偏移地址
-                    fseek(input,(SubFileBaseOffset + j * OffsetLength),SEEK_SET);
-                    if (IsDSor3DS != NULL && strcmp(IsDSor3DS, "-3ds") == 0)
-                    {
-                        temp1 = fgetc(input);
-                        temp2 = fgetc(input);
-                        temp3 = fgetc(input);
-                        temp4 = fgetc(input);
-                        StartOffset = (temp4<<24)|(temp3<<16)|(temp2<<8)|temp1;
-                        //定位下一条文本偏移地址
-                        temp1 = fgetc(input);
-                        temp2 = fgetc(input);
-                        temp3 = fgetc(input);
-                        temp4 = fgetc(input);
-                        NextOffset  = (temp4<<24)|(temp3<<16)|(temp2<<8)|temp1;
-                    }
-                    else if (IsDSor3DS != NULL && strcmp(IsDSor3DS, "-ds") == 0)
-                    {
-                        temp1 = fgetc(input);
-                        temp2 = fgetc(input);
-                        StartOffset = (temp2<<8)|temp1;
-                        //定位下一条文本偏移地址
-                        temp1 = fgetc(input);
-                        temp2 = fgetc(input);
-                        NextOffset  = (temp2<<8)|temp1;
-
-                    }
-
-                    fseek(input,SubFileBaseOffset + StartOffset,SEEK_SET);
-                    //准备循环转码文本
-                    unsigned char buffer[2];
-                    while (fread(buffer, sizeof(buffer[0]), sizeof(buffer), input) == sizeof(buffer))
-                    {
-                        //hex检索码表
-                        unsigned int hexValue = (buffer[0] << 8) | buffer[1];
-                        if (hexValue == 0x0F27)
-                        {
-                            fprintf(outputSub, "\"\n");
-                            break;
-                        }
-                        if (IscharmapRevise != NULL && strcmp(IscharmapRevise, "-r") == 0)
-                            hexValue = (buffer[1] << 8) | buffer[0];
-                        char* utf8Char = NULL;
-                        for (size_t i = 0; i < charmapSize; i++)
-                        {
-                            if (charmap[i].hexValue == hexValue)
-                            {
-                                utf8Char = charmap[i].utf8Char;
-                                break;
-                            }
-                        }
-                        //存在码表
-                        if (utf8Char != NULL)
-                                fprintf(outputSub, "%s", utf8Char);
-                        //不存在码表
-                        else
-                            fprintf(outputSub, "[NoCharmap:0x%X]",hexValue);
-                        //读取文本字符是否达到下一文本地址
-                        if (ftell(input) == (SubFileBaseOffset+NextOffset)|| ftell(input) == (SubFileBaseOffset+SubFileSize))
-                        {
-                            fprintf(outputSub, "\"\n");
-                            break;
-                        }
-                    }
-                }
-                fprintf(outputSub, "\n");
-                //子文件尾
-                if (IsDSor3DS != NULL && strcmp(IsDSor3DS, "-3ds") == 0)
-                {
-                    //fprintf(outputSub, ";文件尾：控制符\n");
-                    //fprintf(outputSub, "%s_Footer: .hword 0x270F\n", SubFileName);
-                    fprintf(outputSub, ";文件尾：控制符，子文件内的文本数\n");
-                    fprintf(outputSub, "%s_Footer: .hword 0x270F,(%s_note - %s_header)/2\n", SubFileName,SubFileName,SubFileName);
-                }
-                else if (IsDSor3DS != NULL && strcmp(IsDSor3DS, "-ds") == 0)
-                {
-                    fprintf(outputSub, ";文件尾：控制符，子文件内的文本数\n");
-                    fprintf(outputSub, "%s_Footer: .hword 0x270F,(%s_note - %s_header)/2\n", SubFileName,SubFileName,SubFileName);
-                }
-                //子文件结束
-                fprintf(outputSub, "\n.func %s_End :: .endfunc\n", SubFileName);
-
-                fclose(outputSub);
-                printf("%s.s 转码完成！",SubFileName);
-                if(TextNoteExist == 1)
-                    printf("且存在注释文本！");
-                printf("\n");
-
+            }
         }
-
     }
-    fprintf(outputMain, ".func %s_End :: .endfunc\n",MainFileName);
+    
+    //文件尾
+    fprintf(outputMain, ";文件尾\n");
+    fprintf(outputMain, ".byte 0xFF\n");
+    fprintf(outputMain, ".func EndOf%s :: .endfunc\n",MainFileName);
+    fprintf(outputMain, ".close\n");
 
+    //子文件结束
     fclose(input);
     fclose(outputMain);
-    printf("%s.s 转码完成！",MainFileName);
     free(charmap);
+    printf("%s.s 转码完成！\n",MainFileName);
+    printf("\n");
 }
 
 int main(int argc, char *argv[]) {
-    system("chcp 65001 & cls");
-    if (argc < 3 || argc > 5 ) {
-        printf("用法: %%s [文件名] [码表名] [DS/3DS] [-r码表翻转](可选)\n", argv[0]);
+    //system("chcp 65001 & cls");
+    if (argc != 3 ) {
+        printf("Usage: %%s textFileName charmapFilename\n", argv[0]);
         return 1;
     }
 
-    const char *binaryFile = argv[1];
+    const char *textFile    = argv[1];
     const char *charmapFile = argv[2];
-    const char *IsDSor3DS = argv[3];
-    const char *IscharmapRevise = argv[4];
 
-    decodeBinaryFile(binaryFile, charmapFile, IsDSor3DS, IscharmapRevise);
+    decodeBinaryFile(textFile, charmapFile);
 
     return 0;
 }
