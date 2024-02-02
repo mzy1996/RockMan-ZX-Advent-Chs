@@ -1,4 +1,4 @@
-.loadtable ".\charmap_zxa_cn_new.txt"
+.loadtable ".\charmap_zxa_cn.txt"
 .include ".\strings\font_jp\m_back_jp.s"
 .include ".\strings\font_jp\m_mg_jp.s"
 .include ".\strings\font_jp\m_over_jp.s"
