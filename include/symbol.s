@@ -13,6 +13,7 @@ Version equ readascii(".\BaseJPVersion.txt",0,1)
     UnknownAddress1     equ 0x020801C7
     UnknownAddress2     equ 0x020800F5
     NDSFileName equ ".\RockmanZXAdvent_Chs_rev0.nds"
+    NameList            equ 0x020DEAA8
 .elseif (Version == 1)
     ;rev1
     FontRely1           equ 0x02080630
@@ -27,6 +28,7 @@ Version equ readascii(".\BaseJPVersion.txt",0,1)
     UnknownAddress1     equ 0x0208070F
     UnknownAddress2     equ 0x0208063D
     NDSFileName equ ".\RockmanZXAdvent_Chs_rev1.nds"
+    NameList            equ 0x020DF088
 .endif
 
 InsertOfArm9            equ 0x020008A0
