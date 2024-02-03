@@ -1,5 +1,6 @@
 .create ".\.temp\root\data\font_cn.bin", 0
-    .incbin ".\graphic\font_cn.bin"
+    ;.incbin ".\graphic\font_cn_old.bin"
+    .incbin ".\graphic\font_cn_new.bin"
 .close
 
 .create ".\.temp\root\data\ls_txt_fnt_jp.bin", 0
