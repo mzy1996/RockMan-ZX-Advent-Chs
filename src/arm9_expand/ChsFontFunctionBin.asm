@@ -73,7 +73,7 @@ Label_0211BB54:
     beq Label_0211BB76
     mov r3,1
     str r3,[r4,0x14]        ;Vars_opend
-;/*
+ /*
 Label_0211BB76:
     ldr r1,[r5,4]           ;获取第一个字节 c = regs->r0;
     ldr r2,[r5,0x3C]        ;定位指到文本地址的地址
@@ -108,7 +108,7 @@ Cal_20_27:
     mov r2,0x24
     lsl r2,r2,4
     add r1,r2,r1            ;c += 0x240;
-;*/
+ */
  /*
     s32 c = regs->r0;
     char **s = (char **)(regs->sp + 0xc);
@@ -131,7 +131,7 @@ Cal_20_27:
         c += 0x240;
     }
  */
- /*旧汉字字库函数
+;/*旧汉字字库函数
 Label_0211BB76:
     ldr r1,[r5,4]           ;获取第一个字节 c = regs->r0;
     cmp r1,0xDF             ;if (c >= 0xe0)
@@ -145,7 +145,7 @@ Label_0211BB76:
     mul r1,r2               ;c *= 0xe0;
     ldrb r3,[r3,1]          ;读取下一字节
     add r1,r3,r1            ;c += **s; 获得字模块数
- */
+;*/
  /*
     s32 c = regs->r0;
     if (c >= 0xe0)
@@ -175,7 +175,7 @@ Label_0211BB8E:
     blx r3
     mov r2,0x80
     ldr r3,[r4,0x10]    ;Vars_tile_count
-    lsl r2,r2,2
+    lsl r2,r2,1         ;r2 = 0x80 * 2 = 0x200 改 * 1
     str r3,[r5,4]
     add r3,1
     cmp r3,r2
