@@ -1,3 +1,4 @@
+.open ".\.temp\root\ftc\arm9.bin", 0x02000000
 .org NameList
 NameList_00: 
 .area 12,0 
@@ -958,4 +959,4 @@ NameList_95:
 ;结束－－－－－－－－－－－－－－－－－－－－－－  
 .endarea 
 
-
+.close
