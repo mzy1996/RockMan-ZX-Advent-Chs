@@ -14,7 +14,7 @@ SubFile1_tile:
 .word 0x80440100
 .word (SubFile2_pal_2 - SubFile1_tile - 0x14)    ;0x0EC8
 .word 0x00080000
-.incbin ".\graphic\ls_map_dtl\SubFile2_tile_cn.bin"
+.incbin ".\graphic\ls_map_dtl\SubFile1_tile_cn.bin"
 
 SubFile2_pal:
 SubFile2_pal_1:
