@@ -9,6 +9,8 @@ NewFontNameChs:
 .incbin ".\graphic\font_name\font_name_8x8_cn.bin"
 .close
 
+.include ".\graphic\ls_map_dtl\ls_map_dtl.s"
+
 .create ".\.temp\root\data\ls_txt_fnt_jp.bin", 0
     .incbin ".\graphic\ls_txt_fnt_jp.bin"
 .close
