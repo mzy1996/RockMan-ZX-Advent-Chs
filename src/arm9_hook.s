@@ -14,23 +14,14 @@
     str r0,[sp,0x4]
     pop r0,pc
 .pool
-;/*
-.org FontRely2
-    cmp r2,0xE0
-    bcc (FontRely2 + 0xC)   ;0x02080492
-    add r0,r0,0x1
-    ldrb r2,[r0,0]
-    .byte 0x00,0x46         ;mov r0,r0
-    .byte 0x00,0x46         ;mov r0,r0
-;*/
- /*
+
 .org (FontCharAdd + 0x22)
     push r3
-    ldr r3,=((ChsFontFunctionInRam+0x180)|1);(FontCharAddChs|1)
+    ldr r3,=((ChsFontFunctionInRam+0x190)|1);(FontCharAddChs|1)
     mov pc,r3
 .pool
     pop r3
- */
+;*/
 
 .org (Font8x8NameRely + 0xD4)
 .word NewFontNameChs
