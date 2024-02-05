@@ -1,5 +1,5 @@
- .loadtable ".\charmap_zxa_cn_old.txt"
-;.loadtable ".\charmap_zxa_cn_new.txt"
+ .loadtable ".\charmap_zxa_fontjp_cn.txt"
+;.loadtable ".\charmap_zxa_fontjp_jp.txt"
 .include ".\strings\font_jp\m_back_jp.s"
 .include ".\strings\font_jp\m_mg_jp.s"
 .include ".\strings\font_jp\m_over_jp.s"
@@ -116,7 +116,8 @@
 .include ".\strings\font_jp\talk_q1f_jp2.s"
 .include ".\strings\font_jp\talk_sys_jp.s"
 
-
+;.loadtable ".\charmap_zxa_fontds_jp.txt"
+ .loadtable ".\charmap_zxa_fontds_cn.txt"
 .include ".\strings\font_ds\m_mg_ds_jp.s"
 
 ;.loadtable ".\charmap_zxa_name_jp.txt"

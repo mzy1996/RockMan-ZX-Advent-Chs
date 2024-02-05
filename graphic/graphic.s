@@ -1,6 +1,5 @@
 .create ".\.temp\root\data\font_cn.bin", 0
-     .incbin ".\graphic\font_cn_old.bin"
-    ;.incbin ".\graphic\font_cn_new.bin"
+     .incbin ".\graphic\font_cn.bin"
 .close
 
 .open ".\.temp\root\data\font_jp.bin",AddressOfFontJP
