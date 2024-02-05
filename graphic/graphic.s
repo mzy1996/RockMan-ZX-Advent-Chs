@@ -21,3 +21,9 @@
 
 ;标题汉化
 .include ".\graphic\title\title.s"
+
+;卡带移除报错图片汉化（位于arm9）
+.include ".\graphic\Card_error\Card_error.s"
+
+;通信切断报错图片汉化（位于arm9）（压缩）
+.include ".\graphic\Link_error\Link_error.s"
