@@ -1,3 +1,4 @@
+.open ".\.temp\root\ftc\arm9.bin", 0x02000000
 ;在arm9解压程序之后运行，位于原arm9末尾，运行后即无用，不会影响后续overlay等内容插入
 .arm
 .org InsertOfArm9
@@ -19,3 +20,4 @@ Back:
 	b (InsertOfArm9 + 4)
 .pool
 EndOfArm9Expand:
+.close

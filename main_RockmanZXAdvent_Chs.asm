@@ -1,11 +1,13 @@
 .nds
 .include ".\include\symbol.s"
 
-.open ".\.temp\root\ftc\arm9.bin", 0x02000000
-    .include ".\src\arm9_hook.s"
-    .include ".\src\arm9_expand.s"
-.close
+;字库程序部分
+.include ".\src\arm9_hook.s"
+.include ".\src\arm9_expand.s"
 
-    .include ".\graphic\graphic.s"
-    .include ".\strings\strings.s"
+;图片汉化部分
+.include ".\graphic\graphic.s"
+
+;文本汉化部分
+.include ".\strings\strings.s"
 
