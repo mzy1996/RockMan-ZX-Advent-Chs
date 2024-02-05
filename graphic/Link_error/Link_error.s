@@ -1,7 +1,9 @@
 .open ".\.temp\root\ftc\arm9.bin", 0x02000000
 
 .org Link_error_tile
+.area 0xA01,00
     .incbin ".\graphic\Link_error\Link_error_cn.4bpp.lz"
+.endarea
 
 .org Link_error_pal
     .incbin ".\graphic\Link_error\Link_error_jp.gbapal"
