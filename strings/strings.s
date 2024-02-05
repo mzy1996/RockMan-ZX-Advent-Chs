@@ -122,4 +122,4 @@
 
 ;.loadtable ".\charmap_zxa_name_jp.txt"
  .loadtable ".\charmap_zxa_name_cn.txt"
-.include ".\strings\NameList.s"
+.include ".\strings\NameList\NameList.s"
