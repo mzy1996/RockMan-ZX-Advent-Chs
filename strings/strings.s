@@ -1,3 +1,4 @@
+;主要剧情、系统文本（font_jp字库）
  .loadtable ".\charmap_zxa_fontjp_cn.txt"
 ;.loadtable ".\charmap_zxa_fontjp_jp.txt"
 .include ".\strings\font_jp\m_back_jp.s"
@@ -116,10 +117,12 @@
 .include ".\strings\font_jp\talk_q1f_jp2.s"
 .include ".\strings\font_jp\talk_sys_jp.s"
 
+;ds联机相关场景文本（font_ds字库）
 ;.loadtable ".\charmap_zxa_fontds_jp.txt"
  .loadtable ".\charmap_zxa_fontds_cn.txt"
 .include ".\strings\font_ds\m_mg_ds_jp.s"
 
+;对话框人名文本（arm9内的小字库，font_name，汉化已扩容迁移至font_jp）
 ;.loadtable ".\charmap_zxa_name_jp.txt"
  .loadtable ".\charmap_zxa_name_cn.txt"
-.include ".\strings\NameList.s"
+.include ".\strings\NameList\NameList.s"

@@ -15,6 +15,10 @@ Version equ readascii(".\BaseJPVersion.txt",0,1)
     NDSFileName equ ".\RockmanZXAdvent_Chs_rev0.nds"
     NameList            equ 0x020DEAA8
     Font8x8NameRely     equ 0x0208C3D8
+    Link_error_tile     equ 0x02101DB0
+    Link_error_pal      equ 0x021027B4
+    Link_error_map      equ 0x021027D4
+    Card_error_tile     equ 0x020FA7C0
 .elseif (Version == 1)
     ;rev1
     FontRely1           equ 0x02080630
@@ -31,6 +35,10 @@ Version equ readascii(".\BaseJPVersion.txt",0,1)
     NDSFileName equ ".\RockmanZXAdvent_Chs_rev1.nds"
     NameList            equ 0x020DF088
     Font8x8NameRely     equ 0x0208C964
+    Link_error_tile     equ 0x021023B8
+    Link_error_pal      equ 0x02102DBC
+    Link_error_map      equ 0x02102DDC
+    Card_error_tile     equ 0x020FADBC
 .endif
 
 InsertOfArm9            equ 0x020008A0

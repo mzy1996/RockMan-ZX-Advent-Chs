@@ -1,31 +1,29 @@
-.create ".\.temp\root\data\font_cn.bin", 0
-     .incbin ".\graphic\font_cn.bin"
-.close
+;主字库汉字字模
+.include ".\graphic\font_cn\font_cn.s"
 
-.open ".\.temp\root\data\font_jp.bin",AddressOfFontJP
-.org (AddressOfFontJP + 0x2260)
-NewFontNameChs:
-.incbin ".\graphic\font_name\font_name_8x8_cn.bin"
-.close
+;名字小字汉字字模，从arm9迁至font_jp后半部分
+.include ".\graphic\font_name\font_name.s"
 
+;地图小字汉字字模及map汉化
 .include ".\graphic\ls_map_dtl\ls_map_dtl.s"
 
-.create ".\.temp\root\data\ls_txt_fnt_jp.bin", 0
-    .incbin ".\graphic\ls_txt_fnt_jp.bin"
-.close
+;
+.include ".\graphic\ls_txt_fnt_jp\ls_txt_fnt_jp.s"
 
-.create ".\.temp\root\data\mg_txt_jp.bin", 0
-    .incbin ".\graphic\mg_txt_jp.bin"
-.close
+;
+.include ".\graphic\mg_txt_jp\mg_txt_jp.s"
 
-.create ".\.temp\root\data\obj_fnt.bin", 0
-    .incbin ".\graphic\obj_fnt.bin"
-.close
+;
+.include ".\graphic\obj_fnt\obj_fnt.s"
 
-.create ".\.temp\root\data\sub_oth_jp.bin", 0
-    .incbin ".\graphic\sub_oth_jp.bin"
-.close
+;
+.include ".\graphic\sub_oth_jp\sub_oth_jp.s"
 
-.create ".\.temp\root\data\title.bin", 0
-    .incbin ".\graphic\title.bin"
-.close
+;标题汉化
+.include ".\graphic\title\title.s"
+
+;卡带移除报错图片汉化（位于arm9）
+.include ".\graphic\Card_error\Card_error.s"
+
+;通信切断报错图片汉化（位于arm9）（压缩）
+.include ".\graphic\Link_error\Link_error.s"
