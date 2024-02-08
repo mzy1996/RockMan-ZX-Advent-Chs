@@ -3,6 +3,7 @@
 .arm
 .org InsertOfArm9
     b EndOfArm9
+    pop r1
 
 .org EndOfArm9
 ;拷贝字体程序至内存空位
@@ -17,7 +18,22 @@ Continue2:
 ;返回原程序
 Back:
 	ldr r0,=0x02000B68
-	b (InsertOfArm9 + 4)
+    ldr r1,[r0,0xC]
+    push r1
+    ldr r1,=(InsertOfArm9 + 4)
+    mov pc,r1
+	;b (InsertOfArm9 + 4)
 .pool
+
+;.include "./src/libnds9.s"
+/*
+Intro_top:
+    .incbin ".\graphic\boot\intro.8bpp"
+EndOfIntro_top:
+
+Intro_top_pal:
+    .incbin ".\graphic\boot\intro.gbapal"
+EndOfIntro_top_pal:*/
+
 EndOfArm9Expand:
 .close
