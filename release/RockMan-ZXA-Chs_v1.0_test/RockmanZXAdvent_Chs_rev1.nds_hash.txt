@@ -1,0 +1,4 @@
+RockmanZXAdvent_Chs_rev1.nds
+CRC32: 9a28eab9
+MD5  : 5e2cb067d01ffd00d6f0b75b249232cb
+SHA1 : bb665fc871728603a7cc2bb5339004ba92166e03
