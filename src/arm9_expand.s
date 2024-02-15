@@ -11,10 +11,10 @@
 Continue1:
 
 ;载入片头
-;.include "./src/arm9_expand/Loadintro.s"
-;.include "./src/arm9_expand/Loadintro_copy.s"
+.include "./src/arm9_expand/Loadintro_cn.s"
 Continue2:
 
+.arm
 ;返回原程序
 Back:
 	ldr r0,=0x02000B68
@@ -24,16 +24,6 @@ Back:
     mov pc,r1
 	;b (InsertOfArm9 + 4)
 .pool
-
-;.include "./src/libnds9.s"
-/*
-Intro_top:
-    .incbin ".\graphic\boot\intro.8bpp"
-EndOfIntro_top:
-
-Intro_top_pal:
-    .incbin ".\graphic\boot\intro.gbapal"
-EndOfIntro_top_pal:*/
 
 EndOfArm9Expand:
 .close
