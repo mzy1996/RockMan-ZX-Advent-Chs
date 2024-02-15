@@ -208,7 +208,7 @@ ActiveBG0:
     ldr r7,=KEYINPUT
     ldr r6,=0x027FFFA8
     ldr r5,=0x027FFFAC
-    ldr r4,=0x01000000
+    ldr r4,=0x00C00000
 @@CheckLoop:
 @@GBAKey:
     ldrh r2,[r7,0]
