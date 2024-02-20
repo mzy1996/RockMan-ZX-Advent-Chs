@@ -1,10 +1,10 @@
 .create ".\.temp\root\data\intro_cn.bin",0
 Intro_cn_header:
-.word 4,EndOfIntro_cn
-.word Intro_tile,(EndOfIntro_tile - Intro_tile)/2
-.word (Intro_tile+(EndOfIntro_tile - Intro_tile)/2),(EndOfIntro_tile - Intro_tile)/2
-.word Intro_pal,(EndOfIntro_pal - Intro_pal)/2
-.word Intro_map,(EndOfIntro_map - Intro_map)/2
+    .word 4,                                                EndOfIntro_cn
+    .word Intro_tile,                                       (EndOfIntro_tile - Intro_tile)/2
+    .word (Intro_tile+(EndOfIntro_tile - Intro_tile)/2),    (EndOfIntro_tile - Intro_tile)/2
+    .word Intro_pal,                                        (EndOfIntro_pal - Intro_pal)
+    .word Intro_map,                                        (EndOfIntro_map - Intro_map)
 
 Intro_tile:
     .incbin Intro_CN_tile

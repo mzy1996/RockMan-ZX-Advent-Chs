@@ -35,12 +35,13 @@
 .func PrintIntro
 InitVRAM:
     push lr
-    ldr r0,=0b10000001
+    ldr r0,=(VRAM_ENABLE | VRAM_A_MAIN_BG)
     ldr r1,=VRAM_A_CR ; 上屏
     strb r0, [r1,0]
-    ldr r0,=0b10000100
+    ldr r0,=(VRAM_ENABLE | VRAM_C_SUB_BG)
     ldr r1,=VRAM_C_CR ; 下屏
     strb r0, [r1,0]
+
 InitFile:
     ldr r0,=Vars_FSFile
     blx FS_InitFile
@@ -55,7 +56,7 @@ LoadTopTile:
     ldr r2,=FS_SEEK_SET
     blx FS_SeekFile
     ldr r0,=Vars_FSFile
-    ldr r1,=0x06004000
+    ldr r1,=BG_TILE_RAM(1)
     ldr r2,=(EndOfIntro_tile - Intro_tile)/2
     blx FS_ReadFile
 ; 下屏图块
@@ -65,7 +66,7 @@ LoadBottomTile:
     ldr r2,=FS_SEEK_SET
     blx FS_SeekFile
     ldr r0,=Vars_FSFile
-    ldr r1,=0x06204000
+    ldr r1,=BG_TILE_RAM_SUB(1)
     ldr r2,=(EndOfIntro_tile - Intro_tile)/2
     blx FS_ReadFile
 
@@ -97,7 +98,7 @@ LoadTopMap:
     ldr r2,=FS_SEEK_SET
     blx FS_SeekFile
     ldr r0,=Vars_FSFile
-    ldr r1,=0x06000000
+    ldr r1,=BG_MAP_RAM(0)
     ldr r2,=(EndOfIntro_map - Intro_map)
     blx FS_ReadFile
 ; 下屏map
@@ -107,7 +108,7 @@ LoadBottomMap:
     ldr r2,=FS_SEEK_SET
     blx FS_SeekFile
     ldr r0,=Vars_FSFile
-    ldr r1,=0x06200000
+    ldr r1,=BG_MAP_RAM_SUB(0)
     ldr r2,=(EndOfIntro_map - Intro_map)
     blx FS_ReadFile
 CloseFile:
@@ -126,15 +127,9 @@ ActiveBG0:
     str r0, [r1,0]
     ldr r1,=REG_BG0CNT_SUB
     str r0, [r1,0]
-    ldr r0,=60
-@@WaitSec:
-    sub r0, 1
-    cmp r0, 0
-    bgt @@WaitSec
     pop pc
-
+.pool
 .align 4
 Intro_cn_name:
     .asciiz "intro_cn.bin"
-.pool
 .endfunc

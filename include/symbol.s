@@ -39,11 +39,8 @@ Version equ readascii(".\BaseJPVersion.txt",0,1)
 
 EntranceOfArm9          equ 0x02000800
 UncompressArm9          equ 0x02000898
-InsertOfArm9            equ 0x02000C00;0x02001074;0x02000C00
-HW_BUTTON_XY_BUF        equ 0x027FFFA8
-HW_TOUCHPANEL_BUF       equ 0x027FFFAA
+InsertOfArm9            equ 0x02000C00
 ChsFontFunctionInRam    equ GfxOfFont8x8NameOld
-
 
 ;NitroFS lib
 .if (Version == 0)
@@ -70,6 +67,6 @@ ChsFontFunctionInRam    equ GfxOfFont8x8NameOld
     FS_SEEK_CUR         equ 1 /* seek from current*/
     FS_SEEK_END         equ 2 /* seek from end*/
 
-.expfunc BIT(n)                 ,(1 << (n))
+.expfunc BIT(n)         ,(1 << (n))
 
 DS_FRAME_RATE           equ 59.8261

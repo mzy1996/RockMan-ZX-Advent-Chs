@@ -1,6 +1,6 @@
 .thumb
 ; r0:被复制的文件地址 r1:要复制到的地址 r2:被复制的文件大小
-.func DMACopy
+.func dmaCopy
     push r0-r7,lr
     ldr r3,=DMA3_SRC
     str r0,[r3,0]
