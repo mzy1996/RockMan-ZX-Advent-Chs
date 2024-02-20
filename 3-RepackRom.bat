@@ -31,7 +31,7 @@ set toolfilename=.\tools\ndstool\ndstool.exe
 .\tools\armips\armips.exe .\tools\Fill.asm
 ::重打包
 rd /s /q %buildfoldername%
-echo =========Now Repacking %newndsfilename%=========
+@echo =========Now Repacking %newndsfilename%=========
 .\tools\tinke\Tinke_autorepack.exe %newndsfilename%
 endlocal
 ::

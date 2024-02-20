@@ -27,3 +27,6 @@
 
 ;通信切断报错图片汉化（位于arm9）（压缩）
 .include ".\graphic\Link_error\Link_error.s"
+
+;汉化组片头
+.include ".\graphic\intro_cn\intro_cn.s"

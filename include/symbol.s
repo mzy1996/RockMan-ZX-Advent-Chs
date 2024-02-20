@@ -37,8 +37,12 @@ Version equ readascii(".\BaseJPVersion.txt",0,1)
     Card_error_tile     equ 0x020FADBC
 .endif
 
-InsertOfArm9            equ 0x020008A0
-ChsFontFunctionInRam    equ 0x023DFD80
+EntranceOfArm9          equ 0x02000800
+UncompressArm9          equ 0x02000898
+InsertOfArm9            equ 0x02000C00;0x02001074;0x02000C00
+HW_BUTTON_XY_BUF        equ 0x027FFFA8
+HW_TOUCHPANEL_BUF       equ 0x027FFFAA
+ChsFontFunctionInRam    equ GfxOfFont8x8NameOld
 
 
 ;NitroFS lib
@@ -48,12 +52,24 @@ ChsFontFunctionInRam    equ 0x023DFD80
     FS_OpenFile         equ 0x020ACBE4
     FS_SeekFile         equ 0x020ACA14
     FS_ReadFile         equ 0x020ACA80
+    FS_CloseFile        equ 0x020ACB9C
+    FS_Init             equ 0x020ACF64
+    FS_TryLoadTable     equ 0x020ACFA0
 .elseif (Version == 1)
     ;rev1
     FS_InitFile         equ 0x020AD50C
     FS_OpenFile         equ 0x020AD1BC
     FS_SeekFile         equ 0x020ACFEC
     FS_ReadFile         equ 0x020AD058
+    FS_CloseFile        equ 0x020AD174
+    FS_Init             equ 0x020AD53C
+    FS_TryLoadTable     equ 0x020AD578
 .endif
+;;FSSeekFileMode
+    FS_SEEK_SET         equ 0 /* seek from begin*/
+    FS_SEEK_CUR         equ 1 /* seek from current*/
+    FS_SEEK_END         equ 2 /* seek from end*/
 
 .expfunc BIT(n)                 ,(1 << (n))
+
+DS_FRAME_RATE           equ 59.8261

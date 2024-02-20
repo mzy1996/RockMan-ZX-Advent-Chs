@@ -1,8 +1,4 @@
-.nds
-.include ".\include\symbol.s"
-
-.create "./.temp/ChsFontFunction.bin",ChsFontFunctionInRam
-;arm9拓展的中文字库主程序
+;arm9插入的中文字库主程序
 .func ChsFontFunction
 Vars_struct:
 
@@ -15,7 +11,7 @@ Vars_FSFile     equ Vars_struct + 0x18
     .ascii "font_cn.bin"
 .endarea
 
-.area 0x110,0x00
+.area 0x100,0x00
 .thumb
 Label_chsfont:
     mov r12,r0
@@ -128,7 +124,7 @@ JumpDsfont:
 
 Label_0211BB8E:
     add r1,1
-    mov r2,0
+    mov r2,FS_SEEK_SET
     ldr r3,=FS_SeekFile
     lsl r1,r1,5
     ldr r0,=Vars_FSFile
@@ -155,6 +151,8 @@ Label_0211BB8E:
 .endarea
 .endfunc
 
+;用于判断使用jp字库（常规汉字程序）
+;还是ds字库（为了联机名正常，使用保留原ds字库部分的字模）
 .func FontCharAddChs
 .area 0x30,0x00
     ldr r3,=AddressOfFontJP
@@ -186,4 +184,3 @@ BackToOrigin:
 .pool
 .endarea
 .endfunc
-.close
