@@ -101,6 +101,9 @@ IntroCnDelay        equ round(DS_FRAME_RATE * 5.14)
 .pool
 .endfunc
 
+;注：desmume模拟器对swi效率不好，会出现卡死状况，可采取以下方式设置：
+;1. 载入bios，在Emulation Setting中勾选“Emulate SWIs with BIOS images”。
+;2. 不载入bios，则在Emulation Setting中，取消勾选“CPU emulation mode”下的“Use dynamic recomplier"。(据说是JIT功能的问题)
 .func Video_VSync
     push r0-r7, lr
     swi 0x5

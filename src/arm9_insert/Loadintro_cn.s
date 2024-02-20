@@ -56,7 +56,7 @@ LoadTopTile:
     ldr r2,=FS_SEEK_SET
     blx FS_SeekFile
     ldr r0,=Vars_FSFile
-    ldr r1,=BG_TILE_RAM(1)
+    ldr r1,=BG_TILE_RAM(0)
     ldr r2,=(EndOfIntro_tile - Intro_tile)/2
     blx FS_ReadFile
 ; 下屏图块
@@ -66,7 +66,7 @@ LoadBottomTile:
     ldr r2,=FS_SEEK_SET
     blx FS_SeekFile
     ldr r0,=Vars_FSFile
-    ldr r1,=BG_TILE_RAM_SUB(1)
+    ldr r1,=BG_TILE_RAM_SUB(0)
     ldr r2,=(EndOfIntro_tile - Intro_tile)/2
     blx FS_ReadFile
 
@@ -91,42 +91,22 @@ LoadBottomPal:
     ldr r2,=(EndOfIntro_pal - Intro_pal)
     blx FS_ReadFile
 
-; 上屏map
-LoadTopMap:
-    ldr r0,=Vars_FSFile
-    ldr r1,=Intro_map
-    ldr r2,=FS_SEEK_SET
-    blx FS_SeekFile
-    ldr r0,=Vars_FSFile
-    ldr r1,=BG_MAP_RAM(0)
-    ldr r2,=(EndOfIntro_map - Intro_map)
-    blx FS_ReadFile
-; 下屏map
-LoadBottomMap:
-    ldr r0,=Vars_FSFile
-    ldr r1,=Intro_map
-    ldr r2,=FS_SEEK_SET
-    blx FS_SeekFile
-    ldr r0,=Vars_FSFile
-    ldr r1,=BG_MAP_RAM_SUB(0)
-    ldr r2,=(EndOfIntro_map - Intro_map)
-    blx FS_ReadFile
 CloseFile:
     ldr r0,=Vars_FSFile
     blx FS_CloseFile
 ; BG0显示
 ActiveBG0:
-    ldr r0,=(MODE_0_2D | DISPLAY_BG0_ACTIVE)
+    ldr r0,=(MODE_5_2D | DISPLAY_BG3_ACTIVE)
     ldr r1,=REG_DISPCNT
     str r0, [r1,0]
     ldr r1,=REG_DISPCNT_SUB
     str r0, [r1,0]
     ; 切换 BG0 模式
-    ldr r0,=(BG_COLOR_256 | BG_TILE_BASE(1))
-    ldr r1,=REG_BG0CNT
-    str r0, [r1,0]
-    ldr r1,=REG_BG0CNT_SUB
-    str r0, [r1,0]
+    ldr r0,=(BG_COLOR_256 | BG_MAP_BASE(0x40))
+    ldr r1,=REG_BG3CNT
+    strh r0, [r1,0]
+    ldr r1,=REG_BG3CNT_SUB
+    strh r0, [r1,0]
     pop pc
 .pool
 .align 4
