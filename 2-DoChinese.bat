@@ -18,7 +18,6 @@ fsutil file setEOF "%buildfoldername%\root\ftc\arm9de.bin" %arm9CompressSize%
 move /Y %buildfoldername%\root\ftc\arm9de.bin %buildfoldername%\root\ftc\arm9.bin
 
 ::修改arm9及其他汉化资源修改替换
-.\tools\armips\armips.exe .\src\arm9_expand\ChsFontFunctionBin.asm
 .\tools\armips\armips.exe .\main_RockmanZXAdvent_Chs.asm
 
 ::压缩arm9

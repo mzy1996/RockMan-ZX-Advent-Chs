@@ -9,5 +9,6 @@ MainNDSFilesize         equ filesize(NDSFileName)
 .elseif (MainNDSFilesize > 0x04000000)
     .fill (0x08000000 - MainNDSFilesize),0xFF
 .endif
+.notice "NDS size (trim) is " + MainNDSFilesize
 .close
 
