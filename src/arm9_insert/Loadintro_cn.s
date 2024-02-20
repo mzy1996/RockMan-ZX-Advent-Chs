@@ -35,12 +35,13 @@
 .func PrintIntro
 InitVRAM:
     push lr
-    ldr r0,=0b10000001
+    ldr r0,=(VRAM_ENABLE | VRAM_A_MAIN_BG)
     ldr r1,=VRAM_A_CR ; 上屏
     strb r0, [r1,0]
-    ldr r0,=0b10000100
+    ldr r0,=(VRAM_ENABLE | VRAM_C_SUB_BG)
     ldr r1,=VRAM_C_CR ; 下屏
     strb r0, [r1,0]
+
 InitFile:
     ldr r0,=Vars_FSFile
     blx FS_InitFile
@@ -55,7 +56,7 @@ LoadTopTile:
     ldr r2,=FS_SEEK_SET
     blx FS_SeekFile
     ldr r0,=Vars_FSFile
-    ldr r1,=0x06004000
+    ldr r1,=BG_TILE_RAM(0)
     ldr r2,=(EndOfIntro_tile - Intro_tile)/2
     blx FS_ReadFile
 ; 下屏图块
@@ -65,7 +66,7 @@ LoadBottomTile:
     ldr r2,=FS_SEEK_SET
     blx FS_SeekFile
     ldr r0,=Vars_FSFile
-    ldr r1,=0x06204000
+    ldr r1,=BG_TILE_RAM_SUB(0)
     ldr r2,=(EndOfIntro_tile - Intro_tile)/2
     blx FS_ReadFile
 
@@ -90,51 +91,25 @@ LoadBottomPal:
     ldr r2,=(EndOfIntro_pal - Intro_pal)
     blx FS_ReadFile
 
-; 上屏map
-LoadTopMap:
-    ldr r0,=Vars_FSFile
-    ldr r1,=Intro_map
-    ldr r2,=FS_SEEK_SET
-    blx FS_SeekFile
-    ldr r0,=Vars_FSFile
-    ldr r1,=0x06000000
-    ldr r2,=(EndOfIntro_map - Intro_map)
-    blx FS_ReadFile
-; 下屏map
-LoadBottomMap:
-    ldr r0,=Vars_FSFile
-    ldr r1,=Intro_map
-    ldr r2,=FS_SEEK_SET
-    blx FS_SeekFile
-    ldr r0,=Vars_FSFile
-    ldr r1,=0x06200000
-    ldr r2,=(EndOfIntro_map - Intro_map)
-    blx FS_ReadFile
 CloseFile:
     ldr r0,=Vars_FSFile
     blx FS_CloseFile
 ; BG0显示
 ActiveBG0:
-    ldr r0,=(MODE_0_2D | DISPLAY_BG0_ACTIVE)
+    ldr r0,=(MODE_5_2D | DISPLAY_BG3_ACTIVE)
     ldr r1,=REG_DISPCNT
     str r0, [r1,0]
     ldr r1,=REG_DISPCNT_SUB
     str r0, [r1,0]
     ; 切换 BG0 模式
-    ldr r0,=(BG_COLOR_256 | BG_TILE_BASE(1))
-    ldr r1,=REG_BG0CNT
-    str r0, [r1,0]
-    ldr r1,=REG_BG0CNT_SUB
-    str r0, [r1,0]
-    ldr r0,=60
-@@WaitSec:
-    sub r0, 1
-    cmp r0, 0
-    bgt @@WaitSec
+    ldr r0,=(BG_COLOR_256 | BG_MAP_BASE(0x40))
+    ldr r1,=REG_BG3CNT
+    strh r0, [r1,0]
+    ldr r1,=REG_BG3CNT_SUB
+    strh r0, [r1,0]
     pop pc
-
+.pool
 .align 4
 Intro_cn_name:
     .asciiz "intro_cn.bin"
-.pool
 .endfunc
