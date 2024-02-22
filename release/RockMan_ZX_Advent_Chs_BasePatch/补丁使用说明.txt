@@ -2,7 +2,7 @@ Windows端：请打开Windows文件夹，将nds文件拖拽至.bat文件上，�
 mac端：请打开macOS文件夹，使用multipatch工具，指定nds日版rom路径、delta补丁路径、汉化rom保存路径后，等待补丁处理即可。
 Android端：请打开Android文件夹，安装UniPatcher，，指定nds日版rom路径、delta补丁路径、汉化rom保存路径后，等待补丁处理即可。
 
-(名词解释)rom：指nds游戏文件，是从正版nds卡带中提取出来，后缀通常为.nds的文件。
+(名词解释)rom：此处指nds游戏文件，合规渠道为从正版nds卡带中提取出来的，后缀通常为.nds的文件。
 
 *.hash.txt文件为日版rev0、rev1rom，或汉化rev0、rev1rom的正确校验值。
 您可使用以下网站或自行寻找其他网站，对您的nds原版rom、或生成的汉化rom进行校验值确认。
