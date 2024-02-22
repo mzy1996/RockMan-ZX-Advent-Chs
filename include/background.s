@@ -308,7 +308,7 @@ BgSize_B16_512x256                  equ ((2 << 14) | BIT(7) | BIT(2) | (4 << 16)
 BgSize_B16_512x512                  equ ((3 << 14) | BIT(7) | BIT(2) | (4 << 16))   /*!< 1024 x 1024 pixel 16 bit bitmap background */
 
 
-static inline
+;static inline
 /*!	\brief Initializes a background on the main display
 		Sets up background control register with specified settings and defaults to 256 color mode
 		for tiled backgrounds.
