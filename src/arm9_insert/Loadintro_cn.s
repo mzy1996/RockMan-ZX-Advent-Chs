@@ -45,13 +45,13 @@
 ;上屏从mode_5_2d直显图片改为map tile组合，是为了使用map控制对话框的文字tile，实现逐字显示效果
 
 ;下屏:
-;   视频模式-MODE_5_2D,
+;   视频模式-MODE_0_2D,
 ;   Vram区块-C,
-;   背景区块-BG3,
+;   背景区块-BG0,
 ;   背景格式:   map基址-0
 ;              tile基址-0
-;              图片大小-BgSize_B8_256x256
-;              图片种类-BgType_Bmp8
+;              图片大小-BgSize_T_256x256
+;              图片种类-BgType_Text8bpp
 ;下屏使用256色(8bpp)的整张tile，tile大小为256*192，直显图片无需使用map进行索引，调色板仍需要
 ;8bpp 256*192 tile与 8bpp 8*8 tile拼成256*192大小，tile文件大小相同（不过ct2里查看起来没法同时看，因为需要调整的图片长宽不同）
 .thumb
@@ -61,7 +61,7 @@ InitVideoMode:
     ldr r0,=MODE_0_2D
     ldr r1,=REG_DISPCNT ; 上屏
     str r0,[r1,0]
-    ldr r0,=MODE_5_2D
+    ldr r0,=MODE_0_2D
     ldr r1,=REG_DISPCNT_SUB ; 下屏
     str r0,[r1,0]
 InitVramBank:
@@ -78,7 +78,7 @@ BgActive:
     ldr r2,[r1,0]
     orr r0,r2
     str r0,[r1,0]
-    ldr r0,=DISPLAY_BG3_ACTIVE
+    ldr r0,=DISPLAY_BG0_ACTIVE
     ldr r1,=REG_DISPCNT_SUB ; 下屏
     ldr r2,[r1,0]
     orr r0,r2
@@ -87,8 +87,8 @@ BgControl:
     ldr r0,=(BG_MAP_BASE(0) | BG_TILE_BASE(1) | (BgSize_T_256x256 & 0xFFFF) | BgType2BgColor(BgType_Text8bpp))
     ldr r1,=REG_BG0CNT ; 上屏
     strh r0, [r1,0]
-    ldr r0,=(BG_MAP_BASE(0) | BG_TILE_BASE(0) | (BgSize_B8_256x256 & 0xFFFF) | BgType2BgColor(BgType_Bmp8))
-    ldr r1,=REG_BG3CNT_SUB ; 下屏
+    ldr r0,=(BG_MAP_BASE(0) | BG_TILE_BASE(1) | (BgSize_T_256x256 & 0xFFFF) | BgType2BgColor(BgType_Text8bpp))
+    ldr r1,=REG_BG0CNT_SUB ; 下屏
     strh r0, [r1,0]
 
 InitFile:
@@ -115,7 +115,7 @@ LoadBottomTile:
     ldr r2,=FS_SEEK_SET
     blx FS_SeekFile
     ldr r0,=Vars_FSFile
-    ldr r1,=BG_TILE_RAM_SUB(0)
+    ldr r1,=BG_TILE_RAM_SUB(1)
     ldr r2,=(EndOfIntro_tile_sub - Intro_tile_sub)
     blx FS_ReadFile
 
@@ -148,6 +148,16 @@ LoadTopMap:
     blx FS_SeekFile
     ldr r0,=Vars_FSFile
     ldr r1,=BG_MAP_RAM(0)
+    ldr r2,=(EndOfIntro_map - Intro_map)
+    blx FS_ReadFile
+; 下屏map
+LoadBottomMap:
+    ldr r0,=Vars_FSFile
+    ldr r1,=Intro_map
+    ldr r2,=FS_SEEK_SET
+    blx FS_SeekFile
+    ldr r0,=Vars_FSFile
+    ldr r1,=BG_MAP_RAM_SUB(0)
     ldr r2,=(EndOfIntro_map - Intro_map)
     blx FS_ReadFile
 

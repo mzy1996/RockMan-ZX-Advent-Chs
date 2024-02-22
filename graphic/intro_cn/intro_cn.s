@@ -23,7 +23,7 @@ EndOfIntro_tile:
 
 ;片头tile为8bpp，非8*8格式，为256 * (192(*2))格式，比起之前的格式，无需提供map
 Intro_tile_sub:
-    .incbin ".\graphic\intro_cn\intro_cn_rev"+ Version +".8bpp"     ,0xC000 ,0xC000
+    .incbin ".\graphic\intro_cn\intro_cn_rev"+ Version +" (2).8bpp" ,0xC000 ,0xC000
 EndOfIntro_tile_sub:
 
 Intro_pal:
