@@ -1,0 +1,4 @@
+baserom_jp_rev0.nds
+CRC32: 89c919bc
+MD5  : 396ab0f79547b774ad51d934c7710fea
+SHA1 : e0b869b83fe6b56ee11d2fe53a6464fae50303c1
