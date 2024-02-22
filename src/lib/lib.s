@@ -22,7 +22,9 @@ CheckDMA:
 ; 等待按键(X,Y,Touch) 0x027FFFA8
 ; 等待延迟
 IntroCnDelay        equ round(DS_FRAME_RATE * 5.14)
-;汉化组片头，于"1.14"更新版加入，片头延时约"5.14"s后自动结束
+;汉化组片头，于"1.14"更新版加入，
+;片头全部显示后，若无按键触屏操作，
+;则延时约"5.14"s后自动结束
 .func WaitForButton
     push r0-r7,lr
     ldr r7,=REG_KEYINPUT
@@ -77,9 +79,14 @@ IntroCnDelay        equ round(DS_FRAME_RATE * 5.14)
     orr r3, r1
     str r3, [r4,0]
     str r3, [r5,0]
+
+    mov r2,3
+@@delay:
     bl Video_VSync
-    bl Video_VSync
-    bl Video_VSync
+    sub r2,1
+    cmp r2,0
+    bgt @@delay
+
 @@CheckFadeLoop:
     cmp r7,0
     beq @@FadeOut

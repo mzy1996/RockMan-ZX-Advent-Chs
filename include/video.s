@@ -189,10 +189,10 @@ REG_DISPCNT_SUB	                equ 0x04001000
 
 ENABLE_3D                       equ (1<<3)
 DISPLAY_ENABLE_SHIFT            equ 8
-DISPLAY_BG0_ACTIVE              equ (1 << 8)
-DISPLAY_BG1_ACTIVE              equ (1 << 9)
-DISPLAY_BG2_ACTIVE              equ (1 << 10)
-DISPLAY_BG3_ACTIVE              equ (1 << 11)
+DISPLAY_BG0_ACTIVE              equ (1 << (DISPLAY_ENABLE_SHIFT + 0))
+DISPLAY_BG1_ACTIVE              equ (1 << (DISPLAY_ENABLE_SHIFT + 1))
+DISPLAY_BG2_ACTIVE              equ (1 << (DISPLAY_ENABLE_SHIFT + 2))
+DISPLAY_BG3_ACTIVE              equ (1 << (DISPLAY_ENABLE_SHIFT + 3))
 DISPLAY_SPR_ACTIVE              equ (1 << 12)
 DISPLAY_WIN0_ON                 equ (1 << 13)
 DISPLAY_WIN1_ON                 equ (1 << 14)

@@ -1,8 +1,7 @@
 Version equ readascii(".\BaseJPVersion.txt",0,1)
+
 .if (Version == 0)
     ;rev0
-    NDSFileName equ ".\RockmanZXAdvent_Chs_rev0.nds"
-    Intro_CN_tile equ ".\graphic\intro_cn\intro_cn_rev0.8bpp"
     FontRely1           equ 0x020800E8
     FontRely2           equ 0x02080486
     FontCharAdd         equ 0x02080464
@@ -19,8 +18,6 @@ Version equ readascii(".\BaseJPVersion.txt",0,1)
     Card_error_tile     equ 0x020FA7C0
 .elseif (Version == 1)
     ;rev1
-    NDSFileName equ ".\RockmanZXAdvent_Chs_rev1.nds"
-    Intro_CN_tile equ ".\graphic\intro_cn\intro_cn_rev1.8bpp"
     FontRely1           equ 0x02080630
     FontRely2           equ 0x020809CE
     FontCharAdd         equ 0x020809AC
@@ -37,6 +34,7 @@ Version equ readascii(".\BaseJPVersion.txt",0,1)
     Card_error_tile     equ 0x020FADBC
 .endif
 
+NDSFileName             equ (".\RockmanZXAdvent_Chs_rev"+ Version +".nds")
 EntranceOfArm9          equ 0x02000800
 UncompressArm9          equ 0x02000898
 InsertOfArm9            equ 0x02000C00

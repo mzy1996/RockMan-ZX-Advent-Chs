@@ -264,6 +264,17 @@ REG_BG3X_SUB		                equ 0x04001038
 /*! \brief Background 3 Screen Offset (sub engine)*/
 REG_BG3Y_SUB		                equ 0x0400103C
 
+//! Allowed background types, used in bgInit and bgInitSub.
+
+BgType_Text8bpp						equ 0	//!< 8bpp Tiled background with 16 bit tile indexes and no allowed rotation or scaling
+BgType_Text4bpp						equ 1	//!< 4bpp Tiled background with 16 bit tile indexes and no allowed rotation or scaling
+BgType_Rotation						equ 2	//!< Tiled background with 8 bit tile indexes Can be scaled and rotated
+BgType_ExRotation					equ 3	//!< Tiled background with 16 bit tile indexes Can be scaled and rotated
+BgType_Bmp8							equ 4	//!< Bitmap background with 8 bit color values which index into a 256 color palette
+BgType_Bmp16						equ 5	//!< Bitmap background with 16 bit color values of the form aBBBBBGGGGGRRRRR (if 'a' is set the pixel will be rendered...if not the pixel will be transparent)
+
+.expfunc BgType2BgColor(n)			, n == BgType_Text8bpp ? BG_COLOR_256 : 0
+
 /**
  * \brief Allowed background Sizes
  * The lower 16 bits of these defines can be used directly to set the background control register bits
@@ -295,3 +306,71 @@ BgSize_B16_128x128                  equ ((0 << 14) | BIT(7) | BIT(2) | (4 << 16)
 BgSize_B16_256x256                  equ ((1 << 14) | BIT(7) | BIT(2) | (4 << 16))   /*!< 256 x 256 pixel 16 bit bitmap background */
 BgSize_B16_512x256                  equ ((2 << 14) | BIT(7) | BIT(2) | (4 << 16))   /*!< 512 x 512 pixel 16 bit bitmap background */
 BgSize_B16_512x512                  equ ((3 << 14) | BIT(7) | BIT(2) | (4 << 16))   /*!< 1024 x 1024 pixel 16 bit bitmap background */
+
+
+;static inline
+/*!	\brief Initializes a background on the main display
+		Sets up background control register with specified settings and defaults to 256 color mode
+		for tiled backgrounds.
+		Sets the rotation/scale attributes for rot/ex rot backgrounds to 1:1 scale and 0 angle of rotation.
+	\param layer
+		background hardware layer to init.  Must be 0 - 3
+	\param type
+		the type of background to init
+	\param size
+		the size of the background
+	\param mapBase
+		the 2k offset into vram the tile map will be placed
+		<br>--OR--<br>
+		the 16k offset into vram the bitmap data will be placed for bitmap backgrounds
+	\param tileBase
+		the 16k offset into vram the tile graphics data will be placed
+	\return
+		the background id to be used in the supporting functions
+	\note
+		tileBase is unused for bitmap backgrounds
+*/
+/*
+int bgInit(int layer, BgType type, BgSize size, int mapBase, int tileBase)
+{
+    sassert(layer >= 0 && layer <= 3, "Only layers 0 - 3 are supported");
+    sassert(tileBase >= 0 && tileBase <= 15, "Background tile base is out of range");
+    sassert(mapBase >=0 && mapBase <= 31, "Background Map Base is out of range");
+	sassert(layer != 0 || !video3DEnabled(), "Background 0 is currently being used for 3D display");
+    sassert(layer > 1 || type == BgType_Text8bpp || type == BgType_Text4bpp, "Incorrect background type for mode");
+    //sassert((size != BgSize_B8_512x1024 && size != BgSize_B8_1024x512) || videoGetMode() == 6, "Incorrect background type for mode");
+	sassert(tileBase == 0 || type < BgType_Bmp8, "Tile base is unused for bitmaps.  Can be offset using mapBase * 16KB");
+	sassert((mapBase == 0 || type != BgType_Bmp8) || (size != BgSize_B8_512x1024 && size != BgSize_B8_1024x512), "Large Bitmaps cannot be offset");
+
+	return bgInit_call(layer, type, size, mapBase, tileBase);
+}
+*/
+;initializes and enables the appropriate background with the supplied attributes
+;returns an id which must be supplied to the remainder of the background functions
+/*
+int bgInit_call(int layer, BgType type, BgSize size, int mapBase, int tileBase) {
+
+	BGCTRL[layer] = BG_MAP_BASE(mapBase) | BG_TILE_BASE(tileBase)
+		| size | ((type == BgType_Text8bpp) ? BG_COLOR_256 : 0);
+
+	memset(&bgState[layer], 0, sizeof(BgState) );
+
+	bgIsTextLut[layer] = checkIfText(layer);
+
+	if(type != BgType_Text8bpp && type != BgType_Text4bpp) {
+		bgSetScale(layer, 1 << 8, 1 << 8);
+		bgSetRotate(layer, 0);
+	}
+
+	bgState[layer].type = type;
+	bgState[layer].size = size;
+
+	videoBgEnable(layer);
+
+	bgState[layer].dirty = true;
+
+	bgUpdate();
+
+	return layer;
+}
+*/
