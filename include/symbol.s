@@ -35,7 +35,6 @@ Version equ readascii(".\BaseJPVersion.txt",0,1)
 .endif
 
 NDSFileName             equ (".\RockmanZXAdvent_Chs_rev"+ Version +".nds")
-Intro_CN_tile           equ (".\graphic\intro_cn\intro_cn_rev"+ Version +".8bpp") 
 EntranceOfArm9          equ 0x02000800
 UncompressArm9          equ 0x02000898
 InsertOfArm9            equ 0x02000C00
