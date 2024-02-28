@@ -9,18 +9,18 @@ if %Version% equ 0 (
 if %Version% equ 1 (
     set newndsfilename=.\RockmanZXAdvent_Chs_rev1.nds)
 ::设定临时文件夹,工具位置
-set buildfoldername=.\.temp
+set tempfoldername=.\.temp
 set toolfilename=.\tools\ndstool\ndstool.exe
 ::ndstool打包汉化rom
 %toolfilename% -c %newndsfilename% ^
--9  %buildfoldername%\root\ftc\arm9.bin ^
--7  %buildfoldername%\root\ftc\arm7.bin ^
--y9 %buildfoldername%\root\ftc\y9.bin ^
--y7 %buildfoldername%\root\ftc\y7.bin ^
--d  %buildfoldername%\root\data ^
--y  %buildfoldername%\root\overlay ^
--t  %buildfoldername%\root\ftc\banner.bin ^
--h  %buildfoldername%\root\ftc\header.bin
+-9  %tempfoldername%\root\ftc\arm9.bin ^
+-7  %tempfoldername%\root\ftc\arm7.bin ^
+-y9 %tempfoldername%\root\ftc\y9.bin ^
+-y7 %tempfoldername%\root\ftc\y7.bin ^
+-d  %tempfoldername%\root\data ^
+-y  %tempfoldername%\root\overlay ^
+-t  %tempfoldername%\root\ftc\banner.bin ^
+-h  %tempfoldername%\root\ftc\header.bin
 ::还原0x60的数值
 .\tools\armips\armips.exe .\tools\headerfix.asm
 ::更新修改后的校验值
@@ -30,7 +30,7 @@ set toolfilename=.\tools\ndstool\ndstool.exe
 ::填充字节
 .\tools\armips\armips.exe .\tools\Fill.asm
 ::重打包
-rd /s /q %buildfoldername%
+rd /s /q %tempfoldername%
 @echo =========Now Repacking %newndsfilename%=========
 .\tools\tinke\Tinke_autorepack.exe %newndsfilename%
 endlocal

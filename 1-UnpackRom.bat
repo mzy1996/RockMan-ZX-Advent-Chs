@@ -28,6 +28,20 @@ md %tempfoldername%\root\ftc
 -y  %tempfoldername%\root\overlay ^
 -t  %tempfoldername%\root\ftc\banner.bin ^
 -h  %tempfoldername%\root\ftc\header.bin
+
+::读取解包arm9大小
+for %%A in ("%tempfoldername%\root\ftc\arm9.bin") do set "arm9Size=%%~zA"
+::计算arm压缩大小
+set /a arm9CompressSize=arm9Size - 0xC
+::裁切另存压缩的arm9
+copy "%tempfoldername%\root\ftc\arm9.bin" "%tempfoldername%\root\ftc\arm9de.bin" /Y
+fsutil file setEOF "%tempfoldername%\root\ftc\arm9de.bin" %arm9CompressSize%
+::dd if=%tempfoldername%\root\ftc\arm9.bin of=%tempfoldername%\root\ftc\arm9de.bin bs=1 skip=0 count=%arm9CompressSize%
+::解压压缩的另存arm9
+.\tools\cue\blz.exe -d %tempfoldername%\root\ftc\arm9de.bin
+::另存arm9合并进原arm9
+move /Y %tempfoldername%\root\ftc\arm9de.bin %tempfoldername%\root\ftc\arm9.bin
+
 endlocal
 ::
 ::3秒后自动关闭本窗口
