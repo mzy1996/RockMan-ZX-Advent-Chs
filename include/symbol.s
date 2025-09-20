@@ -16,6 +16,7 @@ Version equ readascii(".\BaseJPVersion.txt",0,1)
     Link_error_pal      equ 0x021027B4
     Link_error_map      equ 0x021027D4
     Card_error_tile     equ 0x020FA7C0
+    VERSION_H           equ 0x0
 .elseif (Version == 1)
     ;rev1
     FontRely1           equ 0x02080630
@@ -32,6 +33,7 @@ Version equ readascii(".\BaseJPVersion.txt",0,1)
     Link_error_pal      equ 0x02102DBC
     Link_error_map      equ 0x02102DDC
     Card_error_tile     equ 0x020FADBC
+    VERSION_H           equ 0x1
 .endif
 
 NDSFileName             equ (".\RockmanZXAdvent_Chs_rev"+ Version +".nds")
