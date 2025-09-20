@@ -17,11 +17,11 @@ Intro_cn_header:
 
 
 Intro_tile:
-    .incbin ".\graphic\intro_cn\intro_cn_rev"+ Version +".8bpp" ,0                      ,(0x40*(256/8)*(192/8))
+    .incbin ".\graphic\intro_cn\intro_cn_rev"+ Version +"_v1.14.8bpp" ,0                      ,(0x40*(256/8)*(192/8))
 EndOfIntro_tile:
 
 Intro_tile_sub:
-    .incbin ".\graphic\intro_cn\intro_cn_rev"+ Version +".8bpp" ,(0x40*(256/8)*(192/8)) ,(0x40*(256/8)*(192/8))
+    .incbin ".\graphic\intro_cn\intro_cn_rev"+ Version +"_v1.14.8bpp" ,(0x40*(256/8)*(192/8)) ,(0x40*(256/8)*(192/8))
 EndOfIntro_tile_sub:
 
 Intro_pal:
