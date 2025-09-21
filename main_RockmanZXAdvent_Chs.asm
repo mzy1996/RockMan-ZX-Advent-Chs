@@ -15,3 +15,6 @@
 ;文本汉化部分
 .include ".\strings\strings.s"
 
+;视频部分
+.include ".\data\vx\vx.s"
+
