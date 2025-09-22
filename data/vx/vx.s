@@ -1,3 +1,7 @@
+.create ".\.temp\root\data\vx\mov01.vx", 0
+    .incbin ".\data\vx\mov01.vx"
+.close
+
 .create ".\.temp\root\data\vx\mov02a.vx", 0
     .incbin ".\data\vx\mov02a.vx"
 .close
