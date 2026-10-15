@@ -18,3 +18,5 @@
 ;视频部分
 .include ".\data\vx\vx.s"
 
+; Accepted rev1 v7 UI fixes must run after all original resource replacements.
+.include ".\graphic\ui_v7\ui_v7.s"
